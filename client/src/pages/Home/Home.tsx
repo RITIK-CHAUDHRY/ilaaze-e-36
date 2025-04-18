@@ -1,12 +1,13 @@
-import { ModeToggle } from "@/components/mode-toggle"
-import Header from "@/components/shared/Header"
+
+import Hero from "@/components/shared/Hero"
+import Navbar from "@/components/shared/Navbar"
 
 function Home() {
   return (
     <div>
-        <Header />
-        <ModeToggle />
-        Home
+        <Navbar />
+        <Hero />
+        
     </div>
   )
 }
