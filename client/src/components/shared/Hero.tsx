@@ -1,15 +1,25 @@
-
 import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
 
 const Hero = () => {
   const navigate = useNavigate();
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser); // Set user to currentUser if logged in
+    });
+
+    return () => unsubscribe(); // Cleanup the listener on unmount
+  }, []);
 
   const handleBookAppointment = () => {
-    const user = localStorage.getItem('user'); 
     if (user) {
-      navigate('/appointment');
+      navigate('/appointment'); // Navigate to appointment page if user is logged in
     } else {
-      navigate('/login');
+      navigate('/auth'); // Navigate to login page if user is not logged in
     }
   };
 

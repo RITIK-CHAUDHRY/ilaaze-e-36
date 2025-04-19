@@ -1,4 +1,4 @@
-import Navbar from '@/components/shared/Navbar';
+
 import React, { useState } from 'react';
 
 interface UserProfile {
