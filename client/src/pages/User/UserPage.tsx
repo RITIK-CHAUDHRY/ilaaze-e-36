@@ -1,3 +1,4 @@
+import Navbar from '@/components/shared/Navbar';
 import React, { useState } from 'react';
 
 interface UserProfile {
@@ -37,7 +38,9 @@ const UserProfilePage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-blue-400 via-teal-500 to-teal-700 flex items-center justify-center p-6">
+     
       <div className="w-full max-w-4xl bg-white p-10 rounded-3xl shadow-2xl">
+      <Navbar/>
         <h1 className="text-5xl font-extrabold text-center text-teal-600">User Profile</h1>
 
         {/* Personal Information */}

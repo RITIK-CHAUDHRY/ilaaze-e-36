@@ -6,6 +6,8 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import DoctorProfileUI from './pages/Doctor/profile';
 import UserProfilePage from './pages/User/UserPage';
+import AboutUs from './pages/Home/AboutUs';
+import AppointmentPage from './pages/Home/Appointment';
 
 
 
@@ -18,6 +20,8 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/doctor" element={<DoctorProfileUI/>}/>
           <Route path="/User" element={<UserProfilePage/>}/>
+          <Route path="/aboutus" element={<AboutUs/>} />
+          <Route path="/appointment" element={<AppointmentPage/>} />
          
         </Routes>
       </BrowserRouter>
