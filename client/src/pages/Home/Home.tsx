@@ -1,7 +1,8 @@
-import Hero from '@/components/shared/Hero';
-import Navbar from '@/components/shared/Navbar';
-import WhatWeOffer from '@/components/shared/WhatWeOffer';
-import SuggestionForm from '@/components/shared/SuggestionForm';
+import React from 'react';
+import Navbar from '../../components/shared/Navbar';
+import Hero from '../../components/shared/Hero';
+import WhatWeOffer from '../../components/shared/WhatWeOffer';
+import FeedbackForm from '../../components/FeedbackForm';
 
 function Home() {
   return (
@@ -9,7 +10,7 @@ function Home() {
       <Navbar />
       <Hero />
       <WhatWeOffer />
-      <SuggestionForm />
+      <FeedbackForm />
     </div>
   );
 }
