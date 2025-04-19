@@ -16,8 +16,7 @@ const publicItems = [
 // Navigation items for patients
 const patientItems = [
   { label: "Dashboard", href: "/patient-dashboard" },
-  { label: "Appointments", href: "/appointments" },
-  { label: "My Profile", href: "/patient-profile" },
+  { label: "Appointments", href: "/patient-appointments" },
 ];
 
 // Navigation items for doctors
