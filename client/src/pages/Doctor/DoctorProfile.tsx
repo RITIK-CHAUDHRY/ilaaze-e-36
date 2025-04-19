@@ -1,8 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { auth, db } from '@/firebase';
-import { doc, getDoc, setDoc, collection, addDoc, getDocs, deleteDoc } from 'firebase/firestore';
-import { onAuthStateChanged, User } from 'firebase/auth';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { auth, db } from "@/firebase";
+import {
+  doc,
+  getDoc,
+  setDoc,
+  collection,
+  addDoc,
+  getDocs,
+  deleteDoc,
+} from "firebase/firestore";
+import { onAuthStateChanged, User } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -15,13 +23,31 @@ import {
 } from "@/components/ui/select";
 import { Calendar } from "@/components/ui/calendar";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import { format } from "date-fns";
-import { CalendarIcon, Clock, Pencil, Plus, Trash2, Stethoscope, Building2, Award, Phone, MapPin, User2Icon } from "lucide-react";
+import {
+  CalendarIcon,
+  Clock,
+  Pencil,
+  Plus,
+  Trash2,
+  Stethoscope,
+  Building2,
+  Award,
+  Phone,
+  MapPin,
+  User2Icon,
+} from "lucide-react";
 
 interface DoctorData {
   displayName: string;
@@ -48,13 +74,17 @@ interface Patient {
   name: string;
   problem: string;
   appointmentTime: string;
-  status: 'waiting' | 'in-progress' | 'completed';
+  status: "waiting" | "in-progress" | "completed";
 }
 
 const DoctorProfile: React.FC = () => {
   const [doctor, setDoctor] = useState<DoctorData | null>(null);
   const [availability, setAvailability] = useState<AvailabilitySlot[]>([]);
-  const [newSlot, setNewSlot] = useState<AvailabilitySlot>({ date: '', start: '', end: '' });
+  const [newSlot, setNewSlot] = useState<AvailabilitySlot>({
+    date: "",
+    start: "",
+    end: "",
+  });
   const [editForm, setEditForm] = useState<DoctorData | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -65,46 +95,70 @@ const DoctorProfile: React.FC = () => {
 
   // Sample patient queue data
   const [patientQueue, setPatientQueue] = useState<Patient[]>([
-    { id: '1', name: 'John Doe', problem: 'Chest pain and shortness of breath', appointmentTime: '10:00 AM', status: 'waiting' },
-    { id: '2', name: 'Amit Sharma', problem: 'Irregular heartbeat and dizziness', appointmentTime: '10:30 AM', status: 'waiting' },
-    { id: '3', name: 'Sarah Lee', problem: 'High blood pressure and fatigue', appointmentTime: '11:00 AM', status: 'in-progress' },
-    { id: '4', name: 'Priya Patel', problem: 'Annual heart checkup', appointmentTime: '11:30 AM', status: 'waiting' },
+    {
+      id: "1",
+      name: "John Doe",
+      problem: "Chest pain and shortness of breath",
+      appointmentTime: "10:00 AM",
+      status: "waiting",
+    },
+    {
+      id: "2",
+      name: "Amit Sharma",
+      problem: "Irregular heartbeat and dizziness",
+      appointmentTime: "10:30 AM",
+      status: "waiting",
+    },
+    {
+      id: "3",
+      name: "Sarah Lee",
+      problem: "High blood pressure and fatigue",
+      appointmentTime: "11:00 AM",
+      status: "in-progress",
+    },
+    {
+      id: "4",
+      name: "Priya Patel",
+      problem: "Annual heart checkup",
+      appointmentTime: "11:30 AM",
+      status: "waiting",
+    },
   ]);
 
   // Fetch doctor profile and availability slots when auth state is resolved
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user: User | null) => {
       if (!user) {
-        setError('User not authenticated');
-        navigate('/auth');
+        setError("User not authenticated");
+        navigate("/auth");
         setLoading(false);
         return;
       }
 
       try {
-        const doctorRef = doc(db, 'doctors', user.uid);
+        const doctorRef = doc(db, "doctors", user.uid);
         const doctorSnap = await getDoc(doctorRef);
         if (doctorSnap.exists()) {
           const doctorData = doctorSnap.data() as DoctorData;
           setDoctor(doctorData);
           setEditForm(doctorData);
         } else {
-          setError('Doctor profile not found');
-          navigate('/doctor-profile-setup');
+          setError("Doctor profile not found");
+          navigate("/doctor-profile-setup");
           setLoading(false);
           return;
         }
 
-        const slotsRef = collection(db, 'doctors', user.uid, 'availability');
+        const slotsRef = collection(db, "doctors", user.uid, "availability");
         const slotsSnap = await getDocs(slotsRef);
-        const slots = slotsSnap.docs.map(doc => ({
+        const slots = slotsSnap.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
         })) as AvailabilitySlot[];
         setAvailability(slots);
       } catch (err) {
-        console.error('Error fetching data:', err);
-        setError('Failed to load profile');
+        console.error("Error fetching data:", err);
+        setError("Failed to load profile");
       } finally {
         setLoading(false);
       }
@@ -118,16 +172,16 @@ const DoctorProfile: React.FC = () => {
       try {
         const user = auth.currentUser;
         if (!user) {
-          setError('User not authenticated');
+          setError("User not authenticated");
           return;
         }
-        const slotsRef = collection(db, 'doctors', user.uid, 'availability');
+        const slotsRef = collection(db, "doctors", user.uid, "availability");
         const docRef = await addDoc(slotsRef, newSlot);
         setAvailability([...availability, { ...newSlot, id: docRef.id }]);
-        setNewSlot({ date: '', start: '', end: '' });
+        setNewSlot({ date: "", start: "", end: "" });
       } catch (err) {
-        console.error('Error adding slot:', err);
-        setError('Failed to add slot');
+        console.error("Error adding slot:", err);
+        setError("Failed to add slot");
       }
     }
   };
@@ -136,14 +190,14 @@ const DoctorProfile: React.FC = () => {
     try {
       const user = auth.currentUser;
       if (!user) {
-        setError('User not authenticated');
+        setError("User not authenticated");
         return;
       }
-      await deleteDoc(doc(db, 'doctors', user.uid, 'availability', slotId));
-      setAvailability(availability.filter(slot => slot.id !== slotId));
+      await deleteDoc(doc(db, "doctors", user.uid, "availability", slotId));
+      setAvailability(availability.filter((slot) => slot.id !== slotId));
     } catch (err) {
-      console.error('Error deleting slot:', err);
-      setError('Failed to delete slot');
+      console.error("Error deleting slot:", err);
+      setError("Failed to delete slot");
     }
   };
 
@@ -168,27 +222,29 @@ const DoctorProfile: React.FC = () => {
     try {
       const user = auth.currentUser;
       if (!user) {
-        setError('User not authenticated');
+        setError("User not authenticated");
         return;
       }
-      await setDoc(doc(db, 'doctors', user.uid), {
+      await setDoc(doc(db, "doctors", user.uid), {
         ...editForm,
-        uid: user.uid
+        uid: user.uid,
       });
       setDoctor(editForm);
       setIsEditing(false);
     } catch (err) {
-      console.error('Error updating profile:', err);
-      setError('Failed to update profile');
+      console.error("Error updating profile:", err);
+      setError("Failed to update profile");
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const updatePatientStatus = (id: string, status: Patient['status']) => {
-    setPatientQueue(patientQueue.map(patient => 
-      patient.id === id ? { ...patient, status } : patient
-    ));
+  const updatePatientStatus = (id: string, status: Patient["status"]) => {
+    setPatientQueue(
+      patientQueue.map((patient) =>
+        patient.id === id ? { ...patient, status } : patient
+      )
+    );
   };
 
   if (loading) {
@@ -196,7 +252,9 @@ const DoctorProfile: React.FC = () => {
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-teal-500 mx-auto"></div>
-          <p className="mt-4 text-gray-600 dark:text-gray-300">Loading your profile...</p>
+          <p className="mt-4 text-gray-600 dark:text-gray-300">
+            Loading your profile...
+          </p>
         </div>
       </div>
     );
@@ -213,7 +271,10 @@ const DoctorProfile: React.FC = () => {
             <p>{error}</p>
           </CardContent>
           <CardFooter>
-            <Button onClick={() => window.location.reload()} className="ml-auto">
+            <Button
+              onClick={() => window.location.reload()}
+              className="ml-auto"
+            >
               Try Again
             </Button>
           </CardFooter>
@@ -231,16 +292,24 @@ const DoctorProfile: React.FC = () => {
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header Section */}
         <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Doctor Dashboard</h1>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+            Doctor Dashboard
+          </h1>
           <div className="flex items-center space-x-4">
-            <Badge variant="outline" className="border-teal-500 text-teal-600 dark:text-teal-400">
+            <Badge
+              variant="outline"
+              className="border-teal-500 text-teal-600 dark:text-teal-400"
+            >
               <Stethoscope className="h-4 w-4 mr-2" />
               {doctor.specialty}
             </Badge>
             <Avatar>
               <AvatarImage src={doctor.photo} />
               <AvatarFallback>
-                {doctor.displayName.split(' ').map(n => n[0]).join('')}
+                {doctor.displayName
+                  .split(" ")
+                  .map((n) => n[0])
+                  .join("")}
               </AvatarFallback>
             </Avatar>
           </div>
@@ -262,10 +331,16 @@ const DoctorProfile: React.FC = () => {
                 <CardHeader>
                   <div className="flex justify-between items-start">
                     <div>
-                      <CardTitle className="text-2xl">{doctor.displayName}</CardTitle>
+                      <CardTitle className="text-2xl">
+                        {doctor.displayName}
+                      </CardTitle>
                       <CardDescription>{doctor.hospital}</CardDescription>
                     </div>
-                    <Button variant="outline" size="sm" onClick={() => setIsEditing(true)}>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setIsEditing(true)}
+                    >
                       <Pencil className="h-4 w-4 mr-2" />
                       Edit
                     </Button>
@@ -275,7 +350,9 @@ const DoctorProfile: React.FC = () => {
                   <div className="grid grid-cols-2 gap-4">
                     <div className="flex items-center space-x-2">
                       <User2Icon className="h-5 w-5 text-gray-500" />
-                      <span className="text-sm">{doctor.gender}, {doctor.age} years</span>
+                      <span className="text-sm">
+                        {doctor.gender}, {doctor.age} years
+                      </span>
                     </div>
                     <div className="flex items-center space-x-2">
                       <Building2 className="h-5 w-5 text-gray-500" />
@@ -283,7 +360,9 @@ const DoctorProfile: React.FC = () => {
                     </div>
                     <div className="flex items-center space-x-2">
                       <Award className="h-5 w-5 text-gray-500" />
-                      <span className="text-sm">{doctor.experience} experience</span>
+                      <span className="text-sm">
+                        {doctor.experience} experience
+                      </span>
                     </div>
                     <div className="flex items-center space-x-2">
                       <Phone className="h-5 w-5 text-gray-500" />
@@ -347,7 +426,10 @@ const DoctorProfile: React.FC = () => {
                   <ScrollArea className="h-64">
                     <div className="space-y-4">
                       {availability.slice(0, 5).map((slot, idx) => (
-                        <div key={slot.id || idx} className="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-gray-800">
+                        <div
+                          key={slot.id || idx}
+                          className="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-gray-800"
+                        >
                           <div className="flex items-center space-x-3">
                             <div className="p-2 rounded-full bg-teal-100 dark:bg-teal-900">
                               <CalendarIcon className="h-5 w-5 text-teal-600 dark:text-teal-300" />
@@ -359,7 +441,11 @@ const DoctorProfile: React.FC = () => {
                               </p>
                             </div>
                           </div>
-                          <Button variant="outline" size="sm" onClick={() => handleDeleteSlot(slot.id!)}>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleDeleteSlot(slot.id!)}
+                          >
                             <Trash2 className="h-4 w-4" />
                           </Button>
                         </div>
@@ -376,7 +462,9 @@ const DoctorProfile: React.FC = () => {
             <Card>
               <CardHeader>
                 <CardTitle>Manage Availability</CardTitle>
-                <CardDescription>Add time slots when you're available for appointments</CardDescription>
+                <CardDescription>
+                  Add time slots when you're available for appointments
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -385,7 +473,9 @@ const DoctorProfile: React.FC = () => {
                     <Input
                       type="date"
                       value={newSlot.date}
-                      onChange={(e) => setNewSlot({ ...newSlot, date: e.target.value })}
+                      onChange={(e) =>
+                        setNewSlot({ ...newSlot, date: e.target.value })
+                      }
                     />
                   </div>
                   <div className="space-y-2">
@@ -393,7 +483,9 @@ const DoctorProfile: React.FC = () => {
                     <Input
                       type="time"
                       value={newSlot.start}
-                      onChange={(e) => setNewSlot({ ...newSlot, start: e.target.value })}
+                      onChange={(e) =>
+                        setNewSlot({ ...newSlot, start: e.target.value })
+                      }
                     />
                   </div>
                   <div className="space-y-2">
@@ -401,11 +493,17 @@ const DoctorProfile: React.FC = () => {
                     <Input
                       type="time"
                       value={newSlot.end}
-                      onChange={(e) => setNewSlot({ ...newSlot, end: e.target.value })}
+                      onChange={(e) =>
+                        setNewSlot({ ...newSlot, end: e.target.value })
+                      }
                     />
                   </div>
                 </div>
-                <Button onClick={handleAddSlot} className="mt-4" disabled={!newSlot.date || !newSlot.start || !newSlot.end}>
+                <Button
+                  onClick={handleAddSlot}
+                  className="mt-4"
+                  disabled={!newSlot.date || !newSlot.start || !newSlot.end}
+                >
                   <Plus className="h-4 w-4 mr-2" />
                   Add Slot
                 </Button>
@@ -419,19 +517,28 @@ const DoctorProfile: React.FC = () => {
               <CardContent>
                 {availability.length === 0 ? (
                   <div className="text-center py-8">
-                    <p className="text-gray-500">No availability slots added yet</p>
+                    <p className="text-gray-500">
+                      No availability slots added yet
+                    </p>
                   </div>
                 ) : (
                   <div className="space-y-2">
                     {availability.map((slot, idx) => (
-                      <div key={slot.id || idx} className="flex items-center justify-between p-4 border rounded-lg">
+                      <div
+                        key={slot.id || idx}
+                        className="flex items-center justify-between p-4 border rounded-lg"
+                      >
                         <div>
                           <p className="font-medium">{slot.date}</p>
                           <p className="text-sm text-gray-500">
                             {slot.start} - {slot.end}
                           </p>
                         </div>
-                        <Button variant="destructive" size="sm" onClick={() => handleDeleteSlot(slot.id!)}>
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          onClick={() => handleDeleteSlot(slot.id!)}
+                        >
                           <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>
@@ -459,9 +566,18 @@ const DoctorProfile: React.FC = () => {
                             <CardTitle>{patient.name}</CardTitle>
                             <CardDescription>{patient.problem}</CardDescription>
                           </div>
-                          <Badge variant={patient.status === 'in-progress' ? 'default' : 'secondary'}>
-                            {patient.status === 'waiting' ? 'Waiting' : 
-                             patient.status === 'in-progress' ? 'In Progress' : 'Completed'}
+                          <Badge
+                            variant={
+                              patient.status === "in-progress"
+                                ? "default"
+                                : "secondary"
+                            }
+                          >
+                            {patient.status === "waiting"
+                              ? "Waiting"
+                              : patient.status === "in-progress"
+                              ? "In Progress"
+                              : "Completed"}
                           </Badge>
                         </div>
                       </CardHeader>
@@ -472,13 +588,23 @@ const DoctorProfile: React.FC = () => {
                         </p>
                       </CardContent>
                       <CardFooter className="flex justify-end space-x-2">
-                        {patient.status === 'waiting' && (
-                          <Button size="sm" onClick={() => updatePatientStatus(patient.id, 'in-progress')}>
+                        {patient.status === "waiting" && (
+                          <Button
+                            size="sm"
+                            onClick={() =>
+                              updatePatientStatus(patient.id, "in-progress")
+                            }
+                          >
                             Start Consultation
                           </Button>
                         )}
-                        {patient.status === 'in-progress' && (
-                          <Button size="sm" onClick={() => updatePatientStatus(patient.id, 'completed')}>
+                        {patient.status === "in-progress" && (
+                          <Button
+                            size="sm"
+                            onClick={() =>
+                              updatePatientStatus(patient.id, "completed")
+                            }
+                          >
                             Complete Consultation
                           </Button>
                         )}
@@ -498,7 +624,9 @@ const DoctorProfile: React.FC = () => {
             <Card>
               <CardHeader>
                 <CardTitle>Profile Settings</CardTitle>
-                <CardDescription>Update your profile information</CardDescription>
+                <CardDescription>
+                  Update your profile information
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 {isEditing ? (
@@ -508,7 +636,7 @@ const DoctorProfile: React.FC = () => {
                         <Label>Full Name</Label>
                         <Input
                           name="displayName"
-                          value={editForm?.displayName || ''}
+                          value={editForm?.displayName || ""}
                           onChange={handleEditChange}
                           placeholder="Enter your full name"
                           required
@@ -516,31 +644,63 @@ const DoctorProfile: React.FC = () => {
                       </div>
                       <div className="space-y-2">
                         <Label>Years of Experience</Label>
-                        <Select onValueChange={(val) => handleEditSelectChange('experience', val)} value={editForm?.experience}>
+                        <Select
+                          onValueChange={(val) =>
+                            handleEditSelectChange("experience", val)
+                          }
+                          value={editForm?.experience}
+                        >
                           <SelectTrigger>
                             <SelectValue placeholder="Select your experience" />
                           </SelectTrigger>
                           <SelectContent>
-                            {['1-3 years', '3-5 years', '5-10 years', '10+ years'].map((val) => (
-                              <SelectItem key={val} value={val}>{val}</SelectItem>
+                            {[
+                              "1-3 years",
+                              "3-5 years",
+                              "5-10 years",
+                              "10+ years",
+                            ].map((val) => (
+                              <SelectItem key={val} value={val}>
+                                {val}
+                              </SelectItem>
                             ))}
                           </SelectContent>
                         </Select>
                       </div>
                       <div className="space-y-2">
                         <Label>Specialty</Label>
-                        <Select onValueChange={(val) => handleEditSelectChange('specialty', val)} value={editForm?.specialty}>
+                        <Select
+                          onValueChange={(val) =>
+                            handleEditSelectChange("specialty", val)
+                          }
+                          value={editForm?.specialty}
+                        >
                           <SelectTrigger>
                             <SelectValue placeholder="Select your specialty" />
                           </SelectTrigger>
                           <SelectContent className="max-h-64 overflow-y-auto">
                             {[
-                              'Cardiologist', 'Dermatologist', 'Neurologist', 'Orthopedic', 'Pediatrician',
-                              'Psychiatrist', 'ENT Specialist', 'Ophthalmologist', 'Dentist', 'Gynecologist',
-                              'Oncologist', 'General Physician', 'Pulmonologist', 'Urologist', 'Nephrologist',
-                              'Endocrinologist', 'Rheumatologist',
+                              "Cardiologist",
+                              "Dermatologist",
+                              "Neurologist",
+                              "Orthopedic",
+                              "Pediatrician",
+                              "Psychiatrist",
+                              "ENT Specialist",
+                              "Ophthalmologist",
+                              "Dentist",
+                              "Gynecologist",
+                              "Oncologist",
+                              "General Physician",
+                              "Pulmonologist",
+                              "Urologist",
+                              "Nephrologist",
+                              "Endocrinologist",
+                              "Rheumatologist",
                             ].map((specialty) => (
-                              <SelectItem key={specialty} value={specialty}>{specialty}</SelectItem>
+                              <SelectItem key={specialty} value={specialty}>
+                                {specialty}
+                              </SelectItem>
                             ))}
                           </SelectContent>
                         </Select>
@@ -549,7 +709,7 @@ const DoctorProfile: React.FC = () => {
                         <Label>Hospital/Clinic</Label>
                         <Input
                           name="hospital"
-                          value={editForm?.hospital || ''}
+                          value={editForm?.hospital || ""}
                           onChange={handleEditChange}
                           placeholder="Enter hospital/clinic name"
                           required
@@ -559,7 +719,7 @@ const DoctorProfile: React.FC = () => {
                         <Label>Certificate URL</Label>
                         <Input
                           name="certificate"
-                          value={editForm?.certificate || ''}
+                          value={editForm?.certificate || ""}
                           onChange={handleEditChange}
                           placeholder="https://example.com/certificate.pdf"
                           required
@@ -567,7 +727,12 @@ const DoctorProfile: React.FC = () => {
                       </div>
                       <div className="space-y-2">
                         <Label>Gender</Label>
-                        <Select onValueChange={(val) => handleEditSelectChange('gender', val)} value={editForm?.gender}>
+                        <Select
+                          onValueChange={(val) =>
+                            handleEditSelectChange("gender", val)
+                          }
+                          value={editForm?.gender}
+                        >
                           <SelectTrigger>
                             <SelectValue placeholder="Select your gender" />
                           </SelectTrigger>
@@ -582,7 +747,7 @@ const DoctorProfile: React.FC = () => {
                         <Label>Profile Photo URL</Label>
                         <Input
                           name="photo"
-                          value={editForm?.photo || ''}
+                          value={editForm?.photo || ""}
                           onChange={handleEditChange}
                           placeholder="https://..."
                           required
@@ -593,7 +758,7 @@ const DoctorProfile: React.FC = () => {
                         <Input
                           name="age"
                           type="number"
-                          value={editForm?.age || ''}
+                          value={editForm?.age || ""}
                           onChange={handleEditChange}
                           placeholder="Enter your age"
                           required
@@ -603,18 +768,46 @@ const DoctorProfile: React.FC = () => {
                       </div>
                       <div className="space-y-2">
                         <Label>Practice City</Label>
-                        <Select onValueChange={(val) => handleEditSelectChange('area', val)} value={editForm?.area}>
+                        <Select
+                          onValueChange={(val) =>
+                            handleEditSelectChange("area", val)
+                          }
+                          value={editForm?.area}
+                        >
                           <SelectTrigger>
                             <SelectValue placeholder="Select your city" />
                           </SelectTrigger>
                           <SelectContent className="max-h-64 overflow-y-auto">
                             {[
-                              'Mumbai', 'Delhi', 'Bengaluru', 'Hyderabad', 'Ahmedabad', 'Chennai', 'Kolkata',
-                              'Pune', 'Jaipur', 'Lucknow', 'Kanpur', 'Nagpur', 'Indore', 'Thane', 'Bhopal',
-                              'Visakhapatnam', 'Patna', 'Vadodara', 'Ghaziabad', 'Ludhiana', 'Agra', 'Nashik',
-                              'Faridabad', 'Meerut', 'Rajkot',
+                              "Mumbai",
+                              "Delhi",
+                              "Bengaluru",
+                              "Hyderabad",
+                              "Ahmedabad",
+                              "Chennai",
+                              "Kolkata",
+                              "Pune",
+                              "Jaipur",
+                              "Lucknow",
+                              "Kanpur",
+                              "Nagpur",
+                              "Indore",
+                              "Thane",
+                              "Bhopal",
+                              "Visakhapatnam",
+                              "Patna",
+                              "Vadodara",
+                              "Ghaziabad",
+                              "Ludhiana",
+                              "Agra",
+                              "Nashik",
+                              "Faridabad",
+                              "Meerut",
+                              "Rajkot",
                             ].map((city) => (
-                              <SelectItem key={city} value={city}>{city}</SelectItem>
+                              <SelectItem key={city} value={city}>
+                                {city}
+                              </SelectItem>
                             ))}
                           </SelectContent>
                         </Select>
@@ -623,7 +816,7 @@ const DoctorProfile: React.FC = () => {
                         <Label>Phone Number</Label>
                         <Input
                           name="phoneNo"
-                          value={editForm?.phoneNo || ''}
+                          value={editForm?.phoneNo || ""}
                           onChange={handleEditChange}
                           placeholder="+91-XXXXXXXXXX"
                           required
@@ -639,11 +832,8 @@ const DoctorProfile: React.FC = () => {
                       >
                         Cancel
                       </Button>
-                      <Button
-                        type="submit"
-                        disabled={isSubmitting}
-                      >
-                        {isSubmitting ? 'Saving...' : 'Save Changes'}
+                      <Button type="submit" disabled={isSubmitting}>
+                        {isSubmitting ? "Saving..." : "Save Changes"}
                       </Button>
                     </div>
                   </form>
@@ -653,23 +843,36 @@ const DoctorProfile: React.FC = () => {
                       <Avatar className="h-24 w-24">
                         <AvatarImage src={doctor.photo} />
                         <AvatarFallback>
-                          {doctor.displayName.split(' ').map(n => n[0]).join('')}
+                          {doctor.displayName
+                            .split(" ")
+                            .map((n) => n[0])
+                            .join("")}
                         </AvatarFallback>
                       </Avatar>
                       <div>
-                        <h3 className="text-2xl font-bold">{doctor.displayName}</h3>
-                        <p className="text-lg text-teal-600 dark:text-teal-400">{doctor.specialty}</p>
-                        <p className="text-gray-600 dark:text-gray-300">{doctor.hospital}</p>
+                        <h3 className="text-2xl font-bold">
+                          {doctor.displayName}
+                        </h3>
+                        <p className="text-lg text-teal-600 dark:text-teal-400">
+                          {doctor.specialty}
+                        </p>
+                        <p className="text-gray-600 dark:text-gray-300">
+                          {doctor.hospital}
+                        </p>
                       </div>
                     </div>
                     <Separator />
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="space-y-4">
-                        <h4 className="font-semibold text-lg">Personal Information</h4>
+                        <h4 className="font-semibold text-lg">
+                          Personal Information
+                        </h4>
                         <div className="space-y-2">
                           <div className="flex items-center space-x-3">
                             <User2Icon className="h-5 w-5 text-gray-500" />
-                            <span>{doctor.gender}, {doctor.age} years</span>
+                            <span>
+                              {doctor.gender}, {doctor.age} years
+                            </span>
                           </div>
                           <div className="flex items-center space-x-3">
                             <Phone className="h-5 w-5 text-gray-500" />
@@ -682,7 +885,9 @@ const DoctorProfile: React.FC = () => {
                         </div>
                       </div>
                       <div className="space-y-4">
-                        <h4 className="font-semibold text-lg">Professional Information</h4>
+                        <h4 className="font-semibold text-lg">
+                          Professional Information
+                        </h4>
                         <div className="space-y-2">
                           <div className="flex items-center space-x-3">
                             <Award className="h-5 w-5 text-gray-500" />

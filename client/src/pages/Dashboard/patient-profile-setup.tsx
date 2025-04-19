@@ -24,12 +24,12 @@ interface PatientFormData {
 
 const PatientProfileSetup: React.FC = () => {
   const [formData, setFormData] = useState<PatientFormData>({
-    name: '',
-    phoneNumber: '',
-    area: '',
-    gender: '',
-    height: '',
-    weight: '',
+    name: "",
+    phoneNumber: "",
+    area: "",
+    gender: "",
+    height: "",
+    weight: "",
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -57,7 +57,7 @@ const PatientProfileSetup: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+
     try {
       const user = auth.currentUser;
       if (user) {
@@ -107,7 +107,9 @@ const PatientProfileSetup: React.FC = () => {
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Name */}
           <div className="space-y-2">
-            <Label htmlFor="name" className="text-gray-700 dark:text-gray-300">Full Name</Label>
+            <Label htmlFor="name" className="text-gray-700 dark:text-gray-300">
+              Full Name
+            </Label>
             <Input
               id="name"
               name="name"
@@ -121,7 +123,12 @@ const PatientProfileSetup: React.FC = () => {
 
           {/* Phone Number */}
           <div className="space-y-2">
-            <Label htmlFor="phoneNumber" className="text-gray-700 dark:text-gray-300">Phone Number</Label>
+            <Label
+              htmlFor="phoneNumber"
+              className="text-gray-700 dark:text-gray-300"
+            >
+              Phone Number
+            </Label>
             <Input
               id="phoneNumber"
               name="phoneNumber"
@@ -146,14 +153,34 @@ const PatientProfileSetup: React.FC = () => {
               </SelectTrigger>
               <SelectContent className="max-h-64 overflow-y-auto bg-white dark:bg-gray-700">
                 {[
-                  "Mumbai", "Delhi", "Bengaluru", "Hyderabad", "Ahmedabad",
-                  "Chennai", "Kolkata", "Pune", "Jaipur", "Lucknow",
-                  "Kanpur", "Nagpur", "Indore", "Thane", "Bhopal",
-                  "Visakhapatnam", "Patna", "Vadodara", "Ghaziabad", "Ludhiana",
-                  "Agra", "Nashik", "Faridabad", "Meerut", "Rajkot"
+                  "Mumbai",
+                  "Delhi",
+                  "Bengaluru",
+                  "Hyderabad",
+                  "Ahmedabad",
+                  "Chennai",
+                  "Kolkata",
+                  "Pune",
+                  "Jaipur",
+                  "Lucknow",
+                  "Kanpur",
+                  "Nagpur",
+                  "Indore",
+                  "Thane",
+                  "Bhopal",
+                  "Visakhapatnam",
+                  "Patna",
+                  "Vadodara",
+                  "Ghaziabad",
+                  "Ludhiana",
+                  "Agra",
+                  "Nashik",
+                  "Faridabad",
+                  "Meerut",
+                  "Rajkot",
                 ].map((city) => (
-                  <SelectItem 
-                    key={city} 
+                  <SelectItem
+                    key={city}
                     value={city}
                     className="hover:bg-green-50 dark:hover:bg-green-900/50"
                   >
@@ -172,19 +199,19 @@ const PatientProfileSetup: React.FC = () => {
                 <SelectValue placeholder="Select your gender" />
               </SelectTrigger>
               <SelectContent className="bg-white dark:bg-gray-700">
-                <SelectItem 
+                <SelectItem
                   value="male"
                   className="hover:bg-green-50 dark:hover:bg-green-900/50"
                 >
                   Male
                 </SelectItem>
-                <SelectItem 
+                <SelectItem
                   value="female"
                   className="hover:bg-green-50 dark:hover:bg-green-900/50"
                 >
                   Female
                 </SelectItem>
-                <SelectItem 
+                <SelectItem
                   value="others"
                   className="hover:bg-green-50 dark:hover:bg-green-900/50"
                 >
@@ -197,7 +224,12 @@ const PatientProfileSetup: React.FC = () => {
           {/* Height and Weight */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <Label htmlFor="height" className="text-gray-700 dark:text-gray-300">Height (cm)</Label>
+              <Label
+                htmlFor="height"
+                className="text-gray-700 dark:text-gray-300"
+              >
+                Height (cm)
+              </Label>
               <Input
                 id="height"
                 name="height"
@@ -211,7 +243,12 @@ const PatientProfileSetup: React.FC = () => {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="weight" className="text-gray-700 dark:text-gray-300">Weight (kg)</Label>
+              <Label
+                htmlFor="weight"
+                className="text-gray-700 dark:text-gray-300"
+              >
+                Weight (kg)
+              </Label>
               <Input
                 id="weight"
                 name="weight"
@@ -227,16 +264,32 @@ const PatientProfileSetup: React.FC = () => {
           </div>
 
           <div className="pt-4">
-            <Button 
-              type="submit" 
+            <Button
+              type="submit"
               className="w-full py-6 text-lg font-semibold bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 transition-all transform hover:scale-[1.01] shadow-lg hover:shadow-xl"
               disabled={isSubmitting}
             >
               {isSubmitting ? (
                 <>
-                  <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  <svg
+                    className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
                   </svg>
                   Saving Profile...
                 </>
