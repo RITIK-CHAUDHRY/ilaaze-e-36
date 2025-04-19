@@ -14,6 +14,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 interface DoctorFormData {
+  displayName: string;
   experience: string;
   specialty: string;
   hospital: string;
@@ -27,6 +28,7 @@ interface DoctorFormData {
 
 const DoctorProfileSetup: React.FC = () => {
   const [formData, setFormData] = useState<DoctorFormData>({
+    displayName: "",
     experience: "",
     specialty: "",
     hospital: "",
@@ -64,7 +66,7 @@ const DoctorProfileSetup: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+
     try {
       const user = auth.currentUser;
       if (user) {
@@ -110,10 +112,32 @@ const DoctorProfileSetup: React.FC = () => {
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <form
+          onSubmit={handleSubmit}
+          className="grid grid-cols-1 md:grid-cols-2 gap-6"
+        >
+          <div className="space-y-2">
+            <Label
+              htmlFor="displayName"
+              className="text-gray-700 dark:text-gray-300"
+            >
+              Full Name
+            </Label>
+            <Input
+              id="displayName"
+              name="displayName"
+              value={formData.displayName}
+              onChange={handleChange}
+              placeholder="Enter your full name"
+              required
+              className="bg-gray-50 dark:bg-gray-700 border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
           {/* Experience */}
           <div className="space-y-2">
-            <Label className="text-gray-700 dark:text-gray-300">Years of Experience</Label>
+            <Label className="text-gray-700 dark:text-gray-300">
+              Years of Experience
+            </Label>
             <Select
               onValueChange={(val) => handleSelectChange("experience", val)}
             >
@@ -123,8 +147,8 @@ const DoctorProfileSetup: React.FC = () => {
               <SelectContent className="bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600">
                 {["1-3 years", "3-5 years", "5-10 years", "10+ years"].map(
                   (val) => (
-                    <SelectItem 
-                      key={val} 
+                    <SelectItem
+                      key={val}
                       value={val}
                       className="hover:bg-blue-50 dark:hover:bg-blue-900/50"
                     >
@@ -138,7 +162,9 @@ const DoctorProfileSetup: React.FC = () => {
 
           {/* Specialty */}
           <div className="space-y-2">
-            <Label className="text-gray-700 dark:text-gray-300">Specialty</Label>
+            <Label className="text-gray-700 dark:text-gray-300">
+              Specialty
+            </Label>
             <Select
               onValueChange={(val) => handleSelectChange("specialty", val)}
             >
@@ -165,8 +191,8 @@ const DoctorProfileSetup: React.FC = () => {
                   "Endocrinologist",
                   "Rheumatologist",
                 ].map((specialty) => (
-                  <SelectItem 
-                    key={specialty} 
+                  <SelectItem
+                    key={specialty}
                     value={specialty}
                     className="hover:bg-blue-50 dark:hover:bg-blue-900/50"
                   >
@@ -179,7 +205,12 @@ const DoctorProfileSetup: React.FC = () => {
 
           {/* Hospital */}
           <div className="space-y-2">
-            <Label htmlFor="hospital" className="text-gray-700 dark:text-gray-300">Hospital/Clinic</Label>
+            <Label
+              htmlFor="hospital"
+              className="text-gray-700 dark:text-gray-300"
+            >
+              Hospital/Clinic
+            </Label>
             <Input
               id="hospital"
               name="hospital"
@@ -193,7 +224,12 @@ const DoctorProfileSetup: React.FC = () => {
 
           {/* Certificate */}
           <div className="space-y-2">
-            <Label htmlFor="certificate" className="text-gray-700 dark:text-gray-300">Certificate URL</Label>
+            <Label
+              htmlFor="certificate"
+              className="text-gray-700 dark:text-gray-300"
+            >
+              Certificate URL
+            </Label>
             <Input
               id="certificate"
               name="certificate"
@@ -216,19 +252,19 @@ const DoctorProfileSetup: React.FC = () => {
                 <SelectValue placeholder="Select your gender" />
               </SelectTrigger>
               <SelectContent className="bg-white dark:bg-gray-700">
-                <SelectItem 
+                <SelectItem
                   value="male"
                   className="hover:bg-blue-50 dark:hover:bg-blue-900/50"
                 >
                   Male
                 </SelectItem>
-                <SelectItem 
+                <SelectItem
                   value="female"
                   className="hover:bg-blue-50 dark:hover:bg-blue-900/50"
                 >
                   Female
                 </SelectItem>
-                <SelectItem 
+                <SelectItem
                   value="others"
                   className="hover:bg-blue-50 dark:hover:bg-blue-900/50"
                 >
@@ -240,7 +276,9 @@ const DoctorProfileSetup: React.FC = () => {
 
           {/* Photo URL + Preview */}
           <div className="space-y-2">
-            <Label htmlFor="photo" className="text-gray-700 dark:text-gray-300">Profile Photo URL</Label>
+            <Label htmlFor="photo" className="text-gray-700 dark:text-gray-300">
+              Profile Photo URL
+            </Label>
             <div className="flex gap-4">
               <Input
                 id="photo"
@@ -287,7 +325,9 @@ const DoctorProfileSetup: React.FC = () => {
 
           {/* Age */}
           <div className="space-y-2">
-            <Label htmlFor="age" className="text-gray-700 dark:text-gray-300">Age</Label>
+            <Label htmlFor="age" className="text-gray-700 dark:text-gray-300">
+              Age
+            </Label>
             <Input
               id="age"
               name="age"
@@ -304,21 +344,43 @@ const DoctorProfileSetup: React.FC = () => {
 
           {/* Area / City */}
           <div className="space-y-2">
-            <Label className="text-gray-700 dark:text-gray-300">Practice City</Label>
+            <Label className="text-gray-700 dark:text-gray-300">
+              Practice City
+            </Label>
             <Select onValueChange={(val) => handleSelectChange("area", val)}>
               <SelectTrigger className="bg-gray-50 dark:bg-gray-700 border-gray-300 dark:border-gray-600">
                 <SelectValue placeholder="Select your city" />
               </SelectTrigger>
               <SelectContent className="max-h-64 overflow-y-auto bg-white dark:bg-gray-700">
                 {[
-                  "Mumbai", "Delhi", "Bengaluru", "Hyderabad", "Ahmedabad",
-                  "Chennai", "Kolkata", "Pune", "Jaipur", "Lucknow",
-                  "Kanpur", "Nagpur", "Indore", "Thane", "Bhopal",
-                  "Visakhapatnam", "Patna", "Vadodara", "Ghaziabad", "Ludhiana",
-                  "Agra", "Nashik", "Faridabad", "Meerut", "Rajkot"
+                  "Mumbai",
+                  "Delhi",
+                  "Bengaluru",
+                  "Hyderabad",
+                  "Ahmedabad",
+                  "Chennai",
+                  "Kolkata",
+                  "Pune",
+                  "Jaipur",
+                  "Lucknow",
+                  "Kanpur",
+                  "Nagpur",
+                  "Indore",
+                  "Thane",
+                  "Bhopal",
+                  "Visakhapatnam",
+                  "Patna",
+                  "Vadodara",
+                  "Ghaziabad",
+                  "Ludhiana",
+                  "Agra",
+                  "Nashik",
+                  "Faridabad",
+                  "Meerut",
+                  "Rajkot",
                 ].map((city) => (
-                  <SelectItem 
-                    key={city} 
+                  <SelectItem
+                    key={city}
                     value={city}
                     className="hover:bg-blue-50 dark:hover:bg-blue-900/50"
                   >
@@ -331,7 +393,12 @@ const DoctorProfileSetup: React.FC = () => {
 
           {/* Phone Number */}
           <div className="space-y-2">
-            <Label htmlFor="phoneNo" className="text-gray-700 dark:text-gray-300">Phone Number</Label>
+            <Label
+              htmlFor="phoneNo"
+              className="text-gray-700 dark:text-gray-300"
+            >
+              Phone Number
+            </Label>
             <Input
               id="phoneNo"
               name="phoneNo"
@@ -348,16 +415,32 @@ const DoctorProfileSetup: React.FC = () => {
           </div>
 
           <div className="md:col-span-2 pt-4">
-            <Button 
-              type="submit" 
+            <Button
+              type="submit"
               className="w-full py-6 text-lg font-semibold bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 transition-all transform hover:scale-[1.01] shadow-lg hover:shadow-xl"
               disabled={isSubmitting}
             >
               {isSubmitting ? (
                 <>
-                  <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  <svg
+                    className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
                   </svg>
                   Saving Profile...
                 </>

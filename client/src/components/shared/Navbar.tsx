@@ -4,19 +4,53 @@ import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { Button } from "../ui/button";
+import { useAuth } from "@/context/AuthContext";
 
-const items = [
+// Navigation items for non-authenticated users
+const publicItems = [
   { label: "Home", href: "/" },
   { label: "Appointment", href: "/appointment" },
   { label: "About Us", href: "/aboutus" },
-  { label: "Profile", href: "/user" },
+];
+
+// Navigation items for patients
+const patientItems = [
+  { label: "Home", href: "/" },
+  { label: "Appointment", href: "/appointment" },
+  { label: "About Us", href: "/aboutus" },
+  { label: "My Profile", href: "/user" },
+  { label: "Dashboard", href: "/patient-dashboard" },
+];
+
+// Navigation items for doctors
+const doctorItems = [
+  { label: "Home", href: "/" },
+  { label: "About Us", href: "/aboutus" },
+  { label: "My Profile", href: "/doctor" },
+  { label: "Dashboard", href: "/doctor-dashboard" },
 ];
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const { user, userProfile, logout } = useAuth();
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
+  };
+
+  // Determine which navigation items to show based on user role
+  const getNavItems = () => {
+    if (!user || !userProfile) return publicItems;
+    return userProfile.role === 'doctor' ? doctorItems : patientItems;
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      setIsOpen(false);
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
   };
 
   return (
@@ -34,7 +68,7 @@ function Navbar() {
 
         {/* Desktop Nav Links */}
         <div className="hidden sm:flex items-center space-x-6">
-          {items.map((item) => (
+          {getNavItems().map((item) => (
             <Link
               key={item.href}
               to={item.href}
@@ -48,14 +82,29 @@ function Navbar() {
           ))}
         </div>
 
-        {/* Desktop Login Button */}
+        {/* Desktop Auth Buttons */}
         <div className="hidden sm:flex items-center space-x-4">
-          <Link
-            to="/login"
-            className="text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-md transition-colors"
-          >
-            Login
-          </Link>
+          {user ? (
+            <div className="flex items-center space-x-4">
+              <span className="text-sm text-muted-foreground">
+                {userProfile?.displayName}
+              </span>
+              <Button
+                onClick={handleLogout}
+                variant="outline"
+                className="text-sm font-medium"
+              >
+                Logout
+              </Button>
+            </div>
+          ) : (
+            <Link
+              to="/auth"
+              className="text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-md transition-colors"
+            >
+              Login
+            </Link>
+          )}
         </div>
 
         {/* Mobile Hamburger Icon */}
@@ -77,7 +126,7 @@ function Navbar() {
         <div className="bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border/40 h-full overflow-y-auto">
           <div className="container px-4 py-2">
             <div className="flex flex-col space-y-4 py-4">
-              {items.map((item) => (
+              {getNavItems().map((item) => (
                 <Link
                   key={item.href}
                   to={item.href}
@@ -91,20 +140,37 @@ function Navbar() {
             </div>
 
             <div className="border-t border-border/40 pt-4 pb-6">
-              <Link
-                to="/login"
-                className="block w-full text-center text-lg font-medium py-2 px-4 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors mb-3"
-                onClick={() => setIsOpen(false)}
-              >
-                Login
-              </Link>
-              <Link
-                to="/register"
-                className="block w-full text-center text-lg font-medium bg-primary text-primary-foreground hover:bg-primary/90 py-2 px-4 rounded-md transition-colors"
-                onClick={() => setIsOpen(false)}
-              >
-                Sign Up
-              </Link>
+              {user ? (
+                <div className="space-y-4">
+                  <div className="text-center text-lg font-medium text-muted-foreground">
+                    {userProfile?.displayName}
+                  </div>
+                  <Button
+                    onClick={handleLogout}
+                    variant="outline"
+                    className="w-full text-lg font-medium py-2"
+                  >
+                    Logout
+                  </Button>
+                </div>
+              ) : (
+                <>
+                  <Link
+                    to="/auth"
+                    className="block w-full text-center text-lg font-medium py-2 px-4 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors mb-3"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    to="/auth"
+                    className="block w-full text-center text-lg font-medium bg-primary text-primary-foreground hover:bg-primary/90 py-2 px-4 rounded-md transition-colors"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Sign Up
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>
