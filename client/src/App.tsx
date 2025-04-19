@@ -4,6 +4,7 @@ import Home from './pages/Home/Home';
 import Dashboard from './pages/Dashboard/dashboard';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import DoctorProfileUI from './pages/Doctor/profile';
 
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/doctor" element={<DoctorProfileUI/>}/>
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
