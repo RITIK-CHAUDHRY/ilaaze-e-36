@@ -11,8 +11,10 @@ import Dashboard from './pages/Dashboard/dashboard';
 import DoctorProfileSetup from './pages/Dashboard/doctor-profile-setup';
 import PatientProfileSetup from './pages/Dashboard/patient-profile-setup';
 import AuthPage from './pages/Auth/AuthPage';
+import Layout from './components/layout';  
 
-
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 function App() {
   return (
@@ -29,9 +31,7 @@ function App() {
           <Route path="/appointment" element={<AppointmentPage/>} />
           <Route path="/doctor-profile-setup" element={<DoctorProfileSetup /> } />
           <Route path="/patient-profile-setup" element={<PatientProfileSetup /> } />
-          <Route path="/auth" element={<AuthPage /> } />
-          
-         
+          <Route path="/auth" element={<AuthPage /> } /> 
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
