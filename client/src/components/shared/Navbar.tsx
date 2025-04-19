@@ -41,7 +41,7 @@ function Navbar() {
   // Determine which navigation items to show based on user role
   const getNavItems = () => {
     if (!user || !userProfile) return publicItems;
-    return userProfile.role === 'doctor' ? doctorItems : patientItems;
+    return userProfile?.role === 'doctor' ? doctorItems : patientItems;
   };
 
   const handleLogout = async () => {
