@@ -11,7 +11,7 @@ interface UserProfile {
   emergencyContact: string;
 }
 
-const UserProfilePage: React.FC = () => {
+const UserProfile: React.FC = () => {
   const [userProfile, setUserProfile] = useState<UserProfile>({
     name: 'John Doe',
     dob: '1990-05-15',
@@ -167,4 +167,4 @@ const UserProfilePage: React.FC = () => {
   );
 };
 
-export default UserProfilePage;
+export default UserProfile;

@@ -1,49 +1,60 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import { 
-  User,
-  signInWithPopup,
-  signOut,
-  onAuthStateChanged
-} from 'firebase/auth';
-import { auth, googleAuthProvider } from '../firebase';
-import { UserProfile } from '../types/user';
-import { getUserProfile } from '../services/userService';
+import { auth, db } from '@/firebase';
+import { User, onAuthStateChanged } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
+
+interface UserProfile {
+  uid: string;
+  displayName: string | null;
+  email: string | null;
+  photoURL: string | null;
+  role: 'doctor' | 'patient';
+  // Add any additional profile fields you need
+}
 
 interface AuthContextType {
   user: User | null;
   userProfile: UserProfile | null;
   loading: boolean;
-  signInWithGoogle: () => Promise<void>;
   logout: () => Promise<void>;
 }
 
-const AuthContext = createContext<AuthContextType | null>(null);
+const AuthContext = createContext<AuthContextType>({
+  user: null,
+  userProfile: null,
+  loading: true,
+  logout: async () => {},
+});
 
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
-};
-
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      setUser(user);
-      if (user) {
-        try {
-          const profile = await getUserProfile(user.uid);
-          setUserProfile(profile);
-        } catch (error) {
-          console.error('Error fetching user profile:', error);
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      if (firebaseUser) {
+        setUser(firebaseUser);
+        
+        // Check both doctor and patient collections for the user
+        const doctorDocRef = doc(db, 'doctors', firebaseUser.uid);
+        const patientDocRef = doc(db, 'patients', firebaseUser.uid);
+        
+        const [doctorSnap, patientSnap] = await Promise.all([
+          getDoc(doctorDocRef),
+          getDoc(patientDocRef)
+        ]);
+
+        if (doctorSnap.exists()) {
+          setUserProfile({ ...doctorSnap.data(), role: 'doctor' } as UserProfile);
+        } else if (patientSnap.exists()) {
+          setUserProfile({ ...patientSnap.data(), role: 'patient' } as UserProfile);
+        } else {
+          // User is authenticated but doesn't have a profile
           setUserProfile(null);
         }
       } else {
+        setUser(null);
         setUserProfile(null);
       }
       setLoading(false);
@@ -52,43 +63,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     return () => unsubscribe();
   }, []);
 
-  const signInWithGoogle = async () => {
-    try {
-      const result = await signInWithPopup(auth, googleAuthProvider);
-      try {
-        const profile = await getUserProfile(result.user.uid);
-        setUserProfile(profile);
-      } catch (error) {
-        console.error('Error fetching user profile after sign in:', error);
-        setUserProfile(null);
-      }
-    } catch (error) {
-      console.error('Error signing in with Google:', error);
-      throw error;
-    }
-  };
-
   const logout = async () => {
     try {
-      await signOut(auth);
-      setUserProfile(null);
+      await auth.signOut();
     } catch (error) {
-      console.error('Error signing out:', error);
-      throw error;
+      console.error('Error logging out:', error);
     }
-  };
-
-  const value = {
-    user,
-    userProfile,
-    loading,
-    signInWithGoogle,
-    logout
   };
 
   return (
-    <AuthContext.Provider value={value}>
-      {!loading && children}
+    <AuthContext.Provider value={{ user, userProfile, loading, logout }}>
+      {children}
     </AuthContext.Provider>
   );
-};
+}
+
+export const useAuth = () => useContext(AuthContext);
