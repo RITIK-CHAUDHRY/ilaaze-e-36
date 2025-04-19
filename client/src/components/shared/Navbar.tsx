@@ -22,6 +22,7 @@ const patientItems = [
 // Navigation items for doctors
 const doctorItems = [
   { label: "Appointments", href: "/doctor-appointments" },
+  { label: "Requests", href: "/patient-requests" },
   { label: "My Profile", href: "/doctor-dashboard" },
 ];
 

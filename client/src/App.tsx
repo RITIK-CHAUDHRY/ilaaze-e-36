@@ -13,6 +13,8 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import DoctorProfile from './pages/Doctor/DoctorProfile';
 import UserProfile from './pages/Patient/PatientProfile';
+import PatientEditPage from './pages/Patient/PatientEdit';
+import PatientRequests from './pages/Doctor/Requests';
 
 function App() {
   return (
@@ -35,6 +37,8 @@ function App() {
             <Route path="/auth" element={<AuthPage />} />
             <Route path="/doctor-profile-setup" element={<DoctorProfileSetup />} />
             <Route path="/patient-profile-setup" element={<PatientProfileSetup />} />
+            <Route path="/patient-dashboard/edit" element={<PatientEditPage/> } />
+            <Route path="/patient-requests" element={<PatientRequests />} />
           </Routes>
         </BrowserRouter>
       </AuthProvider>
