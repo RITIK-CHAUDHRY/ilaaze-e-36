@@ -2,10 +2,10 @@ import { ModeToggle } from "../mode-toggle";
 import GooeyNav from "./GooeyNav/GooeyNav";
 
 const items = [
-  { label: "Home", href: "#" },
-  { label: "Appointment", href: "#" },
-  { label: "About Us", href: "#" },
-  { label: "Profile", href: "#" },
+  { label: "Home", href: "/" },
+  { label: "Appointment", href: "appointment" },
+  { label: "About Us", href: "aboutus" },
+  { label: "Profile", href: "user" },
 ];
 
 function Navbar() {
