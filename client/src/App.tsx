@@ -2,8 +2,6 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from './components/theme-provider';
 import { AuthProvider } from './context/AuthContext';
 import Home from './pages/Home/Home';
-import DoctorProfileUI from './pages/Doctor/profile';
-import UserProfilePage from './pages/User/UserPage';
 import AboutUs from './pages/Home/AboutUs';
 import AppointmentPage from './pages/Home/Appointment';
 import Dashboard from './pages/Dashboard/dashboard';
@@ -13,6 +11,8 @@ import AuthPage from './pages/Auth/AuthPage';
 import Layout from './components/layout'; // Import the Layout component
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import DoctorProfile from './pages/Doctor/DoctorProfile';
+import UserProfile from './pages/Patient/PatientProfile';
 
 function App() {
   return (
@@ -24,10 +24,8 @@ function App() {
             <Route element={<Layout />}>
               <Route path="/" element={<Home />} />
               <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/doctor-dashboard" element={<DoctorProfileUI />} />
-              <Route path="/patient-dashboard" element={<UserProfilePage />} />
-              <Route path="/doctor" element={<DoctorProfileUI />} />
-              <Route path="/User" element={<UserProfilePage />} />
+              <Route path="/doctor-dashboard" element={<DoctorProfile />} />
+              <Route path="/patient-dashboard" element={<UserProfile />} />
               <Route path="/aboutus" element={<AboutUs />} />
               <Route path="/appointment" element={<AppointmentPage />} />
              

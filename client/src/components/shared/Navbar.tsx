@@ -15,24 +15,20 @@ const publicItems = [
 
 // Navigation items for patients
 const patientItems = [
-  { label: "Home", href: "/" },
-  { label: "Appointment", href: "/appointment" },
-  { label: "About Us", href: "/aboutus" },
-  { label: "My Profile", href: "/user" },
   { label: "Dashboard", href: "/patient-dashboard" },
+  { label: "Appointments", href: "/appointments" },
+  { label: "My Profile", href: "/patient-profile" },
 ];
 
 // Navigation items for doctors
 const doctorItems = [
-  { label: "Home", href: "/" },
-  { label: "About Us", href: "/aboutus" },
-  { label: "My Profile", href: "/doctor" },
-  { label: "Dashboard", href: "/doctor-dashboard" },
+  { label: "Appointments", href: "/doctor-appointments" },
+  { label: "My Profile", href: "/doctor-dashboard" },
 ];
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const { user, userProfile, logout } = useAuth();
+  const { user, userProfile, loading, logout } = useAuth();
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -40,7 +36,8 @@ function Navbar() {
 
   // Determine which navigation items to show based on user role
   const getNavItems = () => {
-    if (!user || !userProfile) return publicItems;
+    if (loading) return []; // Return empty array while loading
+    if (!user) return publicItems;
     return userProfile?.role === 'doctor' ? doctorItems : patientItems;
   };
 
@@ -52,6 +49,10 @@ function Navbar() {
       console.error('Error logging out:', error);
     }
   };
+
+  if (loading) {
+    return null; // Or return a loading skeleton
+  }
 
   return (
     <nav className="fixed top-0 w-full z-50 border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -87,7 +88,7 @@ function Navbar() {
           {user ? (
             <div className="flex items-center space-x-4">
               <span className="text-sm text-muted-foreground">
-                {userProfile?.displayName}
+                {userProfile?.displayName || user.email}
               </span>
               <Button
                 onClick={handleLogout}
@@ -112,6 +113,8 @@ function Navbar() {
           onClick={toggleMenu}
           className="sm:hidden text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-white focus:outline-none"
           aria-label="Toggle menu"
+          variant="ghost"
+          size="icon"
         >
           {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </Button>
@@ -143,7 +146,7 @@ function Navbar() {
               {user ? (
                 <div className="space-y-4">
                   <div className="text-center text-lg font-medium text-muted-foreground">
-                    {userProfile?.displayName}
+                    {userProfile?.displayName || user.email}
                   </div>
                   <Button
                     onClick={handleLogout}
