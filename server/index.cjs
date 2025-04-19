@@ -5,20 +5,20 @@ const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 5000;
 
-// Middleware
+
 app.use(cors());
 app.use(express.json());
 
-// Nodemailer transporter setup - configure with your email service credentials
+
 const transporter = nodemailer.createTransport({
-  service: 'gmail', // e.g., gmail
+  service: 'gmail', 
   auth: {
-    user: process.env.EMAIL_USER, // your email address
-    pass: process.env.EMAIL_PASS, // your email password or app password
+    user: process.env.EMAIL_USER, 
+    pass: process.env.EMAIL_PASS, 
   },
 });
 
-// API endpoint to receive feedback
+
 app.post('/api/feedback', async (req, res) => {
   const { name, email, suggestions } = req.body;
 
@@ -28,7 +28,7 @@ app.post('/api/feedback', async (req, res) => {
 
   const mailOptions = {
     from: email,
-    to: process.env.EMAIL_USER, // send to your email address
+    to: process.env.EMAIL_USER, 
     subject: 'New Feedback Received',
     text: `Name: ${name}\nEmail: ${email}\nSuggestions: ${suggestions}`,
   };

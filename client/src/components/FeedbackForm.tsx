@@ -30,65 +30,81 @@ const FeedbackForm = () => {
       const data = await response.json();
 
       if (response.ok) {
-        setStatusMessage('Feedback sent successfully!');
+        setStatusMessage('✅ Feedback sent successfully!');
         setName('');
         setEmail('');
         setSuggestions('');
       } else {
-        setStatusMessage(data.message || 'Failed to send feedback.');
+        setStatusMessage(data.message || '❌ Failed to send feedback.');
         setIsError(true);
       }
     } catch (error) {
-      setStatusMessage('Failed to send feedback.');
+      setStatusMessage('❌ Failed to send feedback.');
       setIsError(true);
     }
   };
 
   return (
-    <section className="mt-8 p-6 border-t border-gray-300 bg-white rounded-lg shadow-md max-w-lg mx-auto">
-      <h2 className="text-2xl font-semibold text-teal-700 mb-6 text-center">Send Feedback</h2>
-      <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
-        <label htmlFor="name" className="text-teal-800 font-medium">Name:</label>
-        <input
-          id="name"
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-          className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
-        />
+    <section className="mt-12 p-6 sm:p-8 bg-gradient-to-br from-white to-teal-50 dark:from-gray-900 dark:to-gray-800 border border-teal-200 dark:border-gray-700 rounded-2xl shadow-xl max-w-2xl mx-auto transition-all duration-500">
+      <h2 className="text-2xl sm:text-3xl font-bold text-teal-700 dark:text-teal-300 mb-8 text-center tracking-wide">
+        💬 We value your feedback
+      </h2>
 
-        <label htmlFor="email" className="text-teal-800 font-medium">Email:</label>
-        <input
-          id="email"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
-        />
+      <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+        <div>
+          <label htmlFor="name" className="block text-sm font-semibold text-teal-900 dark:text-teal-200 mb-1">
+            Your Name
+          </label>
+          <input
+            id="name"
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+            className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-400 bg-white dark:bg-gray-800 dark:text-white"
+          />
+        </div>
 
-        <label htmlFor="suggestions" className="text-teal-800 font-medium">Suggestions:</label>
-        <textarea
-          id="suggestions"
-          value={suggestions}
-          onChange={(e) => setSuggestions(e.target.value)}
-          required
-          rows={4}
-          className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-teal-500 resize-none"
-        />
+        <div>
+          <label htmlFor="email" className="block text-sm font-semibold text-teal-900 dark:text-teal-200 mb-1">
+            Email Address
+          </label>
+          <input
+            id="email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-400 bg-white dark:bg-gray-800 dark:text-white"
+          />
+        </div>
+
+        <div>
+          <label htmlFor="suggestions" className="block text-sm font-semibold text-teal-900 dark:text-teal-200 mb-1">
+            Your Suggestions
+          </label>
+          <textarea
+            id="suggestions"
+            value={suggestions}
+            onChange={(e) => setSuggestions(e.target.value)}
+            required
+            rows={4}
+            className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-400 resize-none bg-white dark:bg-gray-800 dark:text-white"
+          />
+        </div>
 
         <button
           type="submit"
-          className="bg-teal-600 text-white font-semibold py-2 rounded-md hover:bg-teal-700 transition-colors duration-300"
+          className="mt-2 bg-teal-600 text-white font-semibold py-3 rounded-lg hover:bg-teal-700 hover:shadow-lg transition duration-300"
         >
           Send Feedback
         </button>
       </form>
+
       {statusMessage && (
-        <p className={`mt-4 text-center ${isError ? 'text-red-600' : 'text-green-600'}`}>
+        <div className={`mt-6 text-center font-medium ${isError ? 'text-red-600 dark:text-red-400' : 'text-green-700 dark:text-green-400'}`}>
           {statusMessage}
-        </p>
+        </div>
       )}
     </section>
   );
