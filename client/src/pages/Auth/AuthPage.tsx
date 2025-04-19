@@ -1,12 +1,11 @@
 import { Button } from '@/components/ui/button';
 import { auth, db, googleAuthProvider } from '@/firebase';
 import { signInWithPopup } from 'firebase/auth';
-import { doc, setDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Icons } from '@/components/Icons';
-
 
 const AuthPage: React.FC = () => {
   const navigate = useNavigate();
@@ -18,18 +17,29 @@ const AuthPage: React.FC = () => {
       const result = await signInWithPopup(auth, googleAuthProvider);
       const user = result.user;
 
-      await setDoc(doc(db, `${role}s`, user.uid), {
-        uid: user.uid,
-        email: user.email,
-        displayName: user.displayName,
-        photoURL: user.photoURL,
-        role: role,
-        createdAt: new Date().toISOString(),
-      });
+      if (user) {
+        const userDocRef = doc(db, `${role}s`, user.uid);
+        const docSnap = await getDoc(userDocRef);
 
-      navigate(`/${role}-profile-setup`);
+        if (!docSnap.exists()) {
+          // First-time sign-in: Create user document and redirect to profile setup
+          await setDoc(userDocRef, {
+            uid: user.uid,
+            email: user.email,
+            displayName: user.displayName,
+            photoURL: user.photoURL,
+            role: role,
+            createdAt: new Date().toISOString(),
+          });
+          navigate(`/${role}-profile-setup`);
+        } else {
+          // Returning user: Redirect to the dashboard
+          navigate(`/${role}-dashboard`); // Adjust the dashboard route as needed
+        }
+      }
     } catch (error) {
       console.error("Error signing in with Google:", error);
+      // Consider displaying an error message to the user
     } finally {
       setIsLoading(null);
     }
@@ -49,7 +59,7 @@ const AuthPage: React.FC = () => {
             </p>
           </div>
         </CardHeader>
-        
+
         <CardContent className="p-6 space-y-6">
           <div className="space-y-4">
             <Button
@@ -84,7 +94,6 @@ const AuthPage: React.FC = () => {
               )}
             </Button>
           </div>
-          
         </CardContent>
       </Card>
     </div>
