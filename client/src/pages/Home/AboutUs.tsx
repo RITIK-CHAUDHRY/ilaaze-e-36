@@ -1,6 +1,6 @@
-
 import React from 'react';
 import { useTheme } from '@/components/theme-provider';
+import { Link } from 'react-router-dom';` // Import Link for routing`
 
 const AboutUs: React.FC = () => {
   const { theme } = useTheme();
@@ -32,7 +32,7 @@ const AboutUs: React.FC = () => {
           </p>
         </div>
 
-        {/* Mission & Vision */}
+    
         <div className="grid md:grid-cols-2 gap-10">
           <div
             className={`${
@@ -90,19 +90,19 @@ const AboutUs: React.FC = () => {
             } space-y-2`}
           >
             <li className="flex items-center gap-2">
-              <span className="text-2xl">🌟</span> Compassion and empathy in every interaction
+              <span className="text-2xl"></span> Compassion and empathy in every interaction
             </li>
             <li className="flex items-center gap-2">
-              <span className="text-2xl">🛡️</span> Data privacy and patient confidentiality
+              <span className="text-2xl"></span> Data privacy and patient confidentiality
             </li>
             <li className="flex items-center gap-2">
-              <span className="text-2xl">⚙️</span> Continuous innovation with emerging technology
+              <span className="text-2xl"></span> Continuous innovation with emerging technology
             </li>
             <li className="flex items-center gap-2">
-              <span className="text-2xl">💬</span> Open communication and transparency
+              <span className="text-2xl"></span> Open communication and transparency
             </li>
             <li className="flex items-center gap-2">
-              <span className="text-2xl">🎯</span> Patient-centric care above all
+              <span className="text-2xl"></span> Patient-centric care above all
             </li>
           </ul>
         </div>
@@ -117,14 +117,7 @@ const AboutUs: React.FC = () => {
             Meet the Team
           </h2>
           <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-8">
-            {[
-              { name: 'Dr. Aditi Sharma', role: 'Chief Medical Officer' },
-              { name: 'Raj Malhotra', role: 'CTO' },
-              { name: 'Sneha Verma', role: 'Head of Operations' },
-              { name: 'Prateek Singh', role: 'Full Stack Developer' },
-              { name: 'Riya Kapoor', role: 'UI/UX Designer' },
-              { name: 'Dr. Ankur Mehra', role: 'Clinical Advisor' },
-            ].map((person, idx) => (
+            {[{ name: 'Dr. Aditi Sharma', role: 'Chief Medical Officer' }, { name: 'Raj Malhotra', role: 'CTO' }, { name: 'Sneha Verma', role: 'Head of Operations' }, { name: 'Prateek Singh', role: 'Full Stack Developer' }, { name: 'Riya Kapoor', role: 'UI/UX Designer' }, { name: 'Dr. Ankur Mehra', role: 'Clinical Advisor' }].map((person, idx) => (
               <div
                 key={idx}
                 className={`${
@@ -158,13 +151,15 @@ const AboutUs: React.FC = () => {
               We're always looking for passionate individuals to join our team and help redefine
               healthcare.
             </p>
-            <button
-              className={`px-6 py-3 ${
-                theme === 'dark' ? 'bg-gray-100 text-teal-800' : 'bg-white text-teal-600'
-              } font-semibold rounded-full hover:scale-110 hover:shadow-md transition-all duration-300`}
-            >
-              Contact Us
-            </button>
+            <Link to="/contact-us">
+              <button
+                className={`px-6 py-3 ${
+                  theme === 'dark' ? 'bg-gray-100 text-teal-800' : 'bg-white text-teal-600'
+                } font-semibold rounded-full hover:scale-110 hover:shadow-md transition-all duration-300`}
+              >
+                Contact Us
+              </button>
+            </Link>
           </div>
         </div>
       </div>

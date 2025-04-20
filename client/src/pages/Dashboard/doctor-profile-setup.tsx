@@ -44,7 +44,7 @@ const DoctorProfileSetup: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Add animation class on mount
+  
     document.body.classList.add("animate-fade-in");
     return () => {
       document.body.classList.remove("animate-fade-in");
@@ -133,7 +133,7 @@ const DoctorProfileSetup: React.FC = () => {
               className="bg-gray-50 dark:bg-gray-700 border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
-          {/* Experience */}
+        
           <div className="space-y-2">
             <Label className="text-gray-700 dark:text-gray-300">
               Years of Experience
@@ -160,7 +160,7 @@ const DoctorProfileSetup: React.FC = () => {
             </Select>
           </div>
 
-          {/* Specialty */}
+          
           <div className="space-y-2">
             <Label className="text-gray-700 dark:text-gray-300">
               Specialty
@@ -203,7 +203,7 @@ const DoctorProfileSetup: React.FC = () => {
             </Select>
           </div>
 
-          {/* Hospital */}
+          
           <div className="space-y-2">
             <Label
               htmlFor="hospital"
@@ -222,7 +222,7 @@ const DoctorProfileSetup: React.FC = () => {
             />
           </div>
 
-          {/* Certificate */}
+         
           <div className="space-y-2">
             <Label
               htmlFor="certificate"
@@ -244,7 +244,7 @@ const DoctorProfileSetup: React.FC = () => {
             </p>
           </div>
 
-          {/* Gender */}
+          
           <div className="space-y-2">
             <Label className="text-gray-700 dark:text-gray-300">Gender</Label>
             <Select onValueChange={(val) => handleSelectChange("gender", val)}>
@@ -274,7 +274,7 @@ const DoctorProfileSetup: React.FC = () => {
             </Select>
           </div>
 
-          {/* Photo URL + Preview */}
+        
           <div className="space-y-2">
             <Label htmlFor="photo" className="text-gray-700 dark:text-gray-300">
               Profile Photo URL
@@ -323,7 +323,7 @@ const DoctorProfileSetup: React.FC = () => {
             </div>
           </div>
 
-          {/* Age */}
+        
           <div className="space-y-2">
             <Label htmlFor="age" className="text-gray-700 dark:text-gray-300">
               Age
@@ -342,7 +342,7 @@ const DoctorProfileSetup: React.FC = () => {
             />
           </div>
 
-          {/* Area / City */}
+        
           <div className="space-y-2">
             <Label className="text-gray-700 dark:text-gray-300">
               Practice City
@@ -391,7 +391,7 @@ const DoctorProfileSetup: React.FC = () => {
             </Select>
           </div>
 
-          {/* Phone Number */}
+       
           <div className="space-y-2">
             <Label
               htmlFor="phoneNo"

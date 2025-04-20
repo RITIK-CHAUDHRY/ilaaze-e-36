@@ -46,7 +46,7 @@ const PatientRequests: React.FC = () => {
   const [responseMessage, setResponseMessage] = useState("");
   const [activeRequestId, setActiveRequestId] = useState<string | null>(null);
 
-  // Debug state
+ 
   const [debugInfo, setDebugInfo] = useState({
     doctorUid: "",
     queryPath: "",
@@ -106,10 +106,9 @@ const PatientRequests: React.FC = () => {
         return;
       }
 
-      // Create a batched write
       const batch = writeBatch(db);
 
-      // 1. Update central collection
+      
       const medicalRequestRef = doc(db, "medicalRequests", requestId);
       batch.update(medicalRequestRef, {
         status: newStatus,
@@ -117,10 +116,10 @@ const PatientRequests: React.FC = () => {
         ...(responseMessage && { doctorResponse: responseMessage }),
       });
 
-      // 2. Find request to get patientId
+    
       const request = requests.find((r) => r.id === requestId);
       if (request) {
-        // Update patient's subcollection
+      
         const patientRequestRef = doc(
           db,
           "patients",
@@ -134,7 +133,7 @@ const PatientRequests: React.FC = () => {
           ...(responseMessage && { doctorResponse: responseMessage }),
         });
 
-        // Update doctor's subcollection
+       
         const doctorRequestRef = doc(
           db,
           "doctors",
@@ -151,7 +150,7 @@ const PatientRequests: React.FC = () => {
 
       await batch.commit();
 
-      // Update local state
+      
       setRequests(
         requests.map((req) =>
           req.id === requestId ? { ...req, status: newStatus } : req

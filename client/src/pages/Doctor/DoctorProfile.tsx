@@ -125,7 +125,7 @@ const DoctorProfile: React.FC = () => {
     },
   ]);
 
-  // Fetch doctor profile and availability slots when auth state is resolved
+ 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user: User | null) => {
       if (!user) {
@@ -290,7 +290,7 @@ const DoctorProfile: React.FC = () => {
   return (
     <div className="w-full min-h-screen bg-gradient-to-br from-gray-50 to-teal-50 dark:from-gray-900 dark:to-gray-800 p-4 sm:p-6 overflow-auto">
       <div className="max-w-7xl mx-auto space-y-6">
-        {/* Header Section */}
+        
         <div className="flex justify-between items-center">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
             Doctor Dashboard
@@ -323,10 +323,10 @@ const DoctorProfile: React.FC = () => {
             <TabsTrigger value="settings">Profile Settings</TabsTrigger>
           </TabsList>
 
-          {/* Overview Tab */}
+         
           <TabsContent value="overview" className="space-y-6">
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {/* Profile Card */}
+            
               <Card className="md:col-span-2">
                 <CardHeader>
                   <div className="flex justify-between items-start">
@@ -372,7 +372,7 @@ const DoctorProfile: React.FC = () => {
                 </CardContent>
               </Card>
 
-              {/* Stats Card */}
+              
               <Card>
                 <CardHeader>
                   <CardTitle>Today's Schedule</CardTitle>
@@ -402,7 +402,7 @@ const DoctorProfile: React.FC = () => {
                 </CardContent>
               </Card>
 
-              {/* Calendar Card */}
+             
               <Card>
                 <CardHeader>
                   <CardTitle>Calendar</CardTitle>
@@ -417,7 +417,7 @@ const DoctorProfile: React.FC = () => {
                 </CardContent>
               </Card>
 
-              {/* Upcoming Appointments */}
+              
               <Card className="lg:col-span-2">
                 <CardHeader>
                   <CardTitle>Upcoming Appointments</CardTitle>
@@ -457,7 +457,7 @@ const DoctorProfile: React.FC = () => {
             </div>
           </TabsContent>
 
-          {/* Availability Tab */}
+       
           <TabsContent value="availability" className="space-y-6">
             <Card>
               <CardHeader>
@@ -549,7 +549,7 @@ const DoctorProfile: React.FC = () => {
             </Card>
           </TabsContent>
 
-          {/* Patients Tab */}
+         
           <TabsContent value="patients" className="space-y-6">
             <Card>
               <CardHeader>
@@ -619,7 +619,7 @@ const DoctorProfile: React.FC = () => {
             </Card>
           </TabsContent>
 
-          {/* Settings Tab */}
+          
           <TabsContent value="settings">
             <Card>
               <CardHeader>

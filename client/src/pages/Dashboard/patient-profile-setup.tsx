@@ -105,7 +105,7 @@ const PatientProfileSetup: React.FC = () => {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Name */}
+       
           <div className="space-y-2">
             <Label htmlFor="name" className="text-gray-700 dark:text-gray-300">
               Full Name
@@ -121,7 +121,7 @@ const PatientProfileSetup: React.FC = () => {
             />
           </div>
 
-          {/* Phone Number */}
+         
           <div className="space-y-2">
             <Label
               htmlFor="phoneNumber"
@@ -144,7 +144,7 @@ const PatientProfileSetup: React.FC = () => {
             </p>
           </div>
 
-          {/* Area */}
+          
           <div className="space-y-2">
             <Label className="text-gray-700 dark:text-gray-300">City</Label>
             <Select onValueChange={(val) => handleSelectChange("area", val)}>
@@ -191,7 +191,7 @@ const PatientProfileSetup: React.FC = () => {
             </Select>
           </div>
 
-          {/* Gender */}
+        
           <div className="space-y-2">
             <Label className="text-gray-700 dark:text-gray-300">Gender</Label>
             <Select onValueChange={(val) => handleSelectChange("gender", val)}>
@@ -221,7 +221,7 @@ const PatientProfileSetup: React.FC = () => {
             </Select>
           </div>
 
-          {/* Height and Weight */}
+        
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <Label

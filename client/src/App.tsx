@@ -8,7 +8,8 @@ import Dashboard from './pages/Dashboard/dashboard';
 import DoctorProfileSetup from './pages/Dashboard/doctor-profile-setup';
 import PatientProfileSetup from './pages/Dashboard/patient-profile-setup';
 import AuthPage from './pages/Auth/AuthPage';
-import Layout from './components/layout'; // Import the Layout component
+import Layout from './components/layout'; 
+import ContactUs from './components/contactus'; 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import DoctorProfile from './pages/Doctor/DoctorProfile';
@@ -22,7 +23,7 @@ function App() {
       <AuthProvider>
         <BrowserRouter>
           <Routes>
-            {/* Routes that need the Layout */}
+            
             <Route element={<Layout />}>
               <Route path="/" element={<Home />} />
               <Route path="/dashboard" element={<Dashboard />} />
@@ -30,14 +31,14 @@ function App() {
               <Route path="/patient-dashboard" element={<UserProfile />} />
               <Route path="/aboutus" element={<AboutUs />} />
               <Route path="/appointment" element={<AppointmentPage />} />
-             
+              <Route path="/contact-us" element={<ContactUs />} /> 
             </Route>
 
-            {/* AuthPage that doesn't need Layout */}
+           
             <Route path="/auth" element={<AuthPage />} />
             <Route path="/doctor-profile-setup" element={<DoctorProfileSetup />} />
             <Route path="/patient-profile-setup" element={<PatientProfileSetup />} />
-            <Route path="/patient-dashboard/edit" element={<PatientEditPage/> } />
+            <Route path="/patient-dashboard/edit" element={<PatientEditPage/>} />
             <Route path="/patient-requests" element={<PatientRequests />} />
           </Routes>
         </BrowserRouter>

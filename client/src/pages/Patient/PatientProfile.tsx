@@ -93,7 +93,7 @@ const PatientProfile: React.FC = () => {
       }
 
       try {
-        // Fetch patient profile
+      
         const patientRef = doc(db, "patients", user.uid);
         const patientSnap = await getDoc(patientRef);
 
@@ -107,7 +107,7 @@ const PatientProfile: React.FC = () => {
         const patientData = patientSnap.data() as PatientData;
         setPatient(patientData);
 
-        // Fetch all doctors
+    
         const doctorsQuery = query(collection(db, "doctors"));
         const doctorsSnap = await getDocs(doctorsQuery);
         const doctorsList = doctorsSnap.docs.map((doc) => ({
@@ -116,7 +116,7 @@ const PatientProfile: React.FC = () => {
         })) as Doctor[];
         setDoctors(doctorsList);
 
-        // Fetch patient's medical requests
+       
         const requestsQuery = query(
           collection(db, "patients", user.uid, "medicalRequests"),
           where("patientId", "==", user.uid)
@@ -161,7 +161,7 @@ const PatientProfile: React.FC = () => {
         throw new Error("Selected doctor not found");
       }
   
-      // Create the request object
+  
       const newRequest: MedicalRequest = {
         patientId: user.uid,
         patientName: patient.name,
@@ -175,22 +175,22 @@ const PatientProfile: React.FC = () => {
         ...(patient.photoURL && { patientPhotoURL: patient.photoURL })
       };
   
-      // Create a batched write
+      
       const batch = writeBatch(db);
   
-      // 1. Add to central medicalRequests collection
+      
       const medicalRequestsRef = collection(db, "medicalRequests");
       const requestRef = doc(medicalRequestsRef);
       batch.set(requestRef, newRequest);
   
-      // 2. Add to patient's subcollection
+      
       const patientRequestRef = doc(
         collection(db, "patients", user.uid, "medicalRequests"),
         requestRef.id
       );
       batch.set(patientRequestRef, newRequest);
   
-      // 3. Add to doctor's subcollection
+
       const doctorRequestRef = doc(
         collection(db, "doctors", selectedDoctorId, "patientRequests"),
         requestRef.id
@@ -199,7 +199,7 @@ const PatientProfile: React.FC = () => {
   
       await batch.commit();
   
-      // Update local state
+   
       setRequests([...requests, { ...newRequest, id: requestRef.id }]);
       setProblemDescription("");
       setSelectedDoctorId("");
@@ -255,7 +255,7 @@ const PatientProfile: React.FC = () => {
   return (
     <div className="w-full min-h-screen bg-gradient-to-br from-gray-50 to-teal-50 dark:from-gray-900 dark:to-gray-800 p-4 sm:p-6 overflow-auto">
       <div className="max-w-6xl mx-auto space-y-6">
-        {/* Profile Header */}
+    
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
             <div className="flex items-center space-x-4">
@@ -285,7 +285,7 @@ const PatientProfile: React.FC = () => {
           </CardHeader>
         </Card>
 
-        {/* Medical Request Form */}
+    
         <Card>
           <CardHeader>
             <CardTitle>New Medical Request</CardTitle>
@@ -365,7 +365,7 @@ const PatientProfile: React.FC = () => {
           </CardContent>
         </Card>
 
-        {/* Medical Requests History */}
+        
         <Card>
           <CardHeader>
             <CardTitle>Your Medical Requests</CardTitle>
@@ -444,7 +444,7 @@ const PatientProfile: React.FC = () => {
           </CardContent>
         </Card>
 
-        {/* Available Doctors */}
+ 
         <Card>
           <CardHeader>
             <CardTitle>Available Doctors</CardTitle>

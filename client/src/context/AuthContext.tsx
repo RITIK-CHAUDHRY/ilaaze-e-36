@@ -9,7 +9,7 @@ interface UserProfile {
   email: string | null;
   photoURL: string | null;
   role: 'doctor' | 'patient';
-  // Add any additional profile fields you need
+  
 }
 
 interface AuthContextType {
@@ -36,7 +36,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (firebaseUser) {
         setUser(firebaseUser);
         
-        // Check both doctor and patient collections for the user
+       
         const doctorDocRef = doc(db, 'doctors', firebaseUser.uid);
         const patientDocRef = doc(db, 'patients', firebaseUser.uid);
         
@@ -50,7 +50,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         } else if (patientSnap.exists()) {
           setUserProfile({ ...patientSnap.data(), role: 'patient' } as UserProfile);
         } else {
-          // User is authenticated but doesn't have a profile
+          
           setUserProfile(null);
         }
       } else {

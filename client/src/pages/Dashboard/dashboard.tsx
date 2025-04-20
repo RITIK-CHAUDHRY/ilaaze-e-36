@@ -18,7 +18,7 @@ function Dashboard() {
           return;
         }
 
-        // Try to get doctor data
+        
         const doctorDoc = await getDoc(doc(db, 'doctors', user.uid));
         if (doctorDoc.exists()) {
           setUserRole('doctor');
@@ -27,7 +27,7 @@ function Dashboard() {
           return;
         }
 
-        // Try to get patient data
+      
         const patientDoc = await getDoc(doc(db, 'patients', user.uid));
         if (patientDoc.exists()) {
           setUserRole('patient');
@@ -36,7 +36,7 @@ function Dashboard() {
           return;
         }
 
-        // If no data found, redirect to profile setup
+       
         navigate('/auth');
       } catch (error) {
         console.error('Error fetching user data:', error);

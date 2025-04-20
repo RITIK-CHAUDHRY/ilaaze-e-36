@@ -14,7 +14,7 @@ export const createUserProfile = async (
   role: 'doctor' | 'patient',
   additionalData: Partial<DoctorProfile | PatientProfile> = {}
 ) => {
-  // Create the user profile object
+ 
   const userProfile: UserProfile = {
     uid: user.uid,
     email: user.email || '',
@@ -26,11 +26,10 @@ export const createUserProfile = async (
     ...additionalData
   };
 
-  // Determine which collection to use based on role
   const collectionName = role === 'doctor' ? 'doctors' : 'patients';
   const userRef = doc(db, collectionName, user.uid);
   
-  // Save to the appropriate collection
+
   await setDoc(userRef, {
     ...userProfile,
     createdAt: serverTimestamp(),
@@ -41,7 +40,7 @@ export const createUserProfile = async (
 };
 
 export const getUserProfile = async (uid: string): Promise<UserProfile | null> => {
-  // First try to get from users collection
+ 
   const userRef = doc(db, 'users', uid);
   const userSnap = await getDoc(userRef);
 
@@ -54,7 +53,6 @@ export const getUserProfile = async (uid: string): Promise<UserProfile | null> =
     } as UserProfile;
   }
 
-  // If not found in users, try doctors collection
   const doctorRef = doc(db, 'doctors', uid);
   const doctorSnap = await getDoc(doctorRef);
 
@@ -68,7 +66,6 @@ export const getUserProfile = async (uid: string): Promise<UserProfile | null> =
     } as UserProfile;
   }
 
-  // If not found in doctors, try patients collection
   const patientRef = doc(db, 'patients', uid);
   const patientSnap = await getDoc(patientRef);
 
@@ -82,7 +79,7 @@ export const getUserProfile = async (uid: string): Promise<UserProfile | null> =
     } as UserProfile;
   }
 
-  // If not found in any collection, return null
+ 
   return null;
 };
 
@@ -90,12 +87,12 @@ export const updateUserProfile = async (
   uid: string,
   data: Partial<UserProfile>
 ) => {
-  // First check which collection the user is in
+
   const userRef = doc(db, 'users', uid);
   const userSnap = await getDoc(userRef);
   
   if (userSnap.exists()) {
-    // Update in users collection
+   
     await updateDoc(userRef, {
       ...data,
       updatedAt: serverTimestamp()
@@ -103,12 +100,12 @@ export const updateUserProfile = async (
     return;
   }
   
-  // Check doctors collection
+
   const doctorRef = doc(db, 'doctors', uid);
   const doctorSnap = await getDoc(doctorRef);
   
   if (doctorSnap.exists()) {
-    // Update in doctors collection
+    
     await updateDoc(doctorRef, {
       ...data,
       updatedAt: serverTimestamp()
@@ -116,12 +113,12 @@ export const updateUserProfile = async (
     return;
   }
   
-  // Check patients collection
+  
   const patientRef = doc(db, 'patients', uid);
   const patientSnap = await getDoc(patientRef);
   
   if (patientSnap.exists()) {
-    // Update in patients collection
+   
     await updateDoc(patientRef, {
       ...data,
       updatedAt: serverTimestamp()
@@ -129,6 +126,6 @@ export const updateUserProfile = async (
     return;
   }
   
-  // If not found in any collection, throw an error
+  
   throw new Error('User profile not found in any collection');
 }; 
