@@ -8,6 +8,7 @@ import {
   query,
   where,
   writeBatch,
+  updateDoc,
 } from "firebase/firestore";
 import { onAuthStateChanged, User } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
@@ -140,27 +141,27 @@ const PatientProfile: React.FC = () => {
 
   const handleSubmitRequest = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!problemDescription.trim() || !selectedDoctorId) {
       setError("Please provide a valid problem description and select a doctor");
       return;
     }
-  
+
     const user = auth.currentUser;
     if (!user || !patient) {
       setError("Authentication failed or patient data missing");
       return;
     }
-  
+
     setIsSubmitting(true);
     setError(null);
-  
+
     try {
       const selectedDoctor = doctors.find((d) => d.id === selectedDoctorId);
       if (!selectedDoctor) {
         throw new Error("Selected doctor not found");
       }
-  
+
       // Create the request object
       const newRequest: MedicalRequest = {
         patientId: user.uid,
@@ -172,38 +173,66 @@ const PatientProfile: React.FC = () => {
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
         patientPhone: patient.phoneNumber,
-        ...(patient.photoURL && { patientPhotoURL: patient.photoURL })
+        ...(patient.photoURL && { patientPhotoURL: patient.photoURL }),
       };
-  
+
       // Create a batched write
       const batch = writeBatch(db);
-  
+
       // 1. Add to central medicalRequests collection
       const medicalRequestsRef = collection(db, "medicalRequests");
       const requestRef = doc(medicalRequestsRef);
       batch.set(requestRef, newRequest);
-  
+
       // 2. Add to patient's subcollection
       const patientRequestRef = doc(
         collection(db, "patients", user.uid, "medicalRequests"),
         requestRef.id
       );
       batch.set(patientRequestRef, newRequest);
-  
+
       // 3. Add to doctor's subcollection
       const doctorRequestRef = doc(
         collection(db, "doctors", selectedDoctorId, "patientRequests"),
         requestRef.id
       );
       batch.set(doctorRequestRef, newRequest);
-  
+
       await batch.commit();
-  
-      // Update local state
-      setRequests([...requests, { ...newRequest, id: requestRef.id }]);
+
+      // Call backend summarization API
+      const response = await fetch("/api/summarize", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ text: problemDescription.trim() }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to generate summary");
+      }
+
+      const data = await response.json();
+      const summary = data.summary;
+
+      // Update Firestore document with summary
+      const updatedRequest = { ...newRequest, summary };
+
+      // Update all three locations with summary
+      await Promise.all([
+        // Update central medicalRequests collection
+        updateDoc(requestRef, { summary }),
+        // Update patient's subcollection
+        updateDoc(patientRequestRef, { summary }),
+        // Update doctor's subcollection
+        updateDoc(doctorRequestRef, { summary }),
+      ]);
+
+      // Update local state with summary
+      setRequests([...requests, { ...updatedRequest, id: requestRef.id }]);
       setProblemDescription("");
       setSelectedDoctorId("");
-  
     } catch (err: any) {
       console.error("Error submitting request:", err);
       setError(`Failed to submit request: ${err.message}`);

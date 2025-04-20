@@ -18,7 +18,8 @@ app.post('/api/summarize', async (req, res) => {
     });
     res.json({ summary: response.data.summary });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Error in /api/summarize:', error.response ? error.response.data : error.message);
+    res.status(500).json({ error: error.response ? error.response.data : error.message });
   }
 });
 
