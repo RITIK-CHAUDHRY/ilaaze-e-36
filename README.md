@@ -56,7 +56,7 @@ It includes a smart feature: an **NLP-based patient report summarizer** that hel
 
 **Team Name:** CTRL+ALT+JEET
 
-- [Ritik Chaudhry]
+- [Ritik Chaudhry] (Team Leader)
 - [Hemant Raj]  
 - [Kanishk Agrawal]
 - [Utpal Yadav] 
